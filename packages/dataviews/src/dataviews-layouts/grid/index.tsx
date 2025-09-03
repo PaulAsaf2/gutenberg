@@ -19,7 +19,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { useInstanceId } from '@wordpress/compose';
 import { isAppleOS } from '@wordpress/keycodes';
-import { useContext } from '@wordpress/element';
+import { useContext, useEffect, useRef } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -68,6 +68,7 @@ interface GridItemProps< Item > {
 		sizes: string;
 	};
 	posinset?: number;
+	itemRef?: React.Ref< HTMLElement >;
 }
 
 function GridItem< Item >( {
@@ -88,6 +89,7 @@ function GridItem< Item >( {
 	hasBulkActions,
 	config,
 	posinset,
+	itemRef,
 }: GridItemProps< Item > ) {
 	const {
 		showTitle = true,
@@ -132,6 +134,7 @@ function GridItem< Item >( {
 
 	return (
 		<VStack
+			ref={ itemRef }
 			spacing={ 0 }
 			key={ id }
 			className={ clsx( 'dataviews-view-grid__card', {
@@ -295,7 +298,13 @@ function ViewGrid< Item >( {
 	className,
 	empty,
 }: ViewGridProps< Item > ) {
-	const { resizeObserverRef } = useContext( DataViewsContext );
+	const { resizeObserverRef, intersectionObserverCallback } =
+		useContext( DataViewsContext );
+	const intersectionObserverRef = useRef< IntersectionObserver | null >(
+		null
+	);
+	const itemRefs = useRef< Map< string, HTMLElement > >( new Map() );
+
 	const titleField = fields.find(
 		( field ) => field.id === view?.titleField
 	);
@@ -341,6 +350,59 @@ function ViewGrid< Item >( {
 		: null;
 	const dataByGroup = groupField ? getDataByGroup( data, groupField ) : null;
 	const isInfiniteScroll = view.infiniteScrollEnabled && ! dataByGroup;
+
+	// Set up IntersectionObserver
+	useEffect( () => {
+		if ( ! intersectionObserverCallback || dataByGroup ) {
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			intersectionObserverCallback,
+			{
+				root: null,
+				rootMargin: '0px',
+				threshold: 0.1,
+			}
+		);
+
+		intersectionObserverRef.current = observer;
+
+		// Observe all current items
+		itemRefs.current.forEach( ( element ) => {
+			observer.observe( element );
+		} );
+
+		return () => {
+			observer.disconnect();
+		};
+	}, [ intersectionObserverCallback, dataByGroup ] );
+
+	// Helper function to handle item ref changes
+	const setItemRef = ( itemId: string, element: HTMLElement | null ) => {
+		// Don't observe if we have grouped data
+		if ( dataByGroup ) {
+			return;
+		}
+
+		const observer = intersectionObserverRef.current;
+		const currentElement = itemRefs.current.get( itemId );
+
+		// Unobserve previous element if it exists
+		if ( currentElement && observer ) {
+			observer.unobserve( currentElement );
+		}
+
+		if ( element ) {
+			itemRefs.current.set( itemId, element );
+			// Observe new element if observer is ready
+			if ( observer ) {
+				observer.observe( element );
+			}
+		} else {
+			itemRefs.current.delete( itemId );
+		}
+	};
 
 	return (
 		<>
@@ -424,9 +486,13 @@ function ViewGrid< Item >( {
 						role={ isInfiniteScroll ? 'feed' : undefined }
 					>
 						{ data.map( ( item, index ) => {
+							const itemId = getItemId( item );
 							return (
 								<GridItem
-									key={ getItemId( item ) }
+									key={ itemId }
+									itemRef={ ( element ) =>
+										setItemRef( itemId, element )
+									}
 									view={ view }
 									selection={ selection }
 									onChangeSelection={ onChangeSelection }
