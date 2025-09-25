@@ -75,6 +75,7 @@ export function DimensionsPanel( { clientId, name, setAttributes, settings } ) {
 			select( blockEditorStore ).getBlockAttributes( clientId )?.style,
 		[ clientId ]
 	);
+
 	const [ visualizedProperty, setVisualizedProperty ] = useVisualizer();
 	const onChange = ( newStyle ) => {
 		setAttributes( {
@@ -148,7 +149,12 @@ export function hasDimensionsSupport( blockName, feature = 'any' ) {
 	}
 
 	if ( feature === 'any' ) {
-		return !! ( support?.aspectRatio || !! support?.minHeight );
+		return !! (
+			support?.aspectRatio ||
+			!! support?.minHeight ||
+			!! support?.width ||
+			!! support?.height
+		);
 	}
 
 	return !! support?.[ feature ];
@@ -156,16 +162,16 @@ export function hasDimensionsSupport( blockName, feature = 'any' ) {
 
 export default {
 	useBlockProps,
-	attributeKeys: [ 'minHeight', 'style' ],
+	attributeKeys: [ 'minHeight', 'width', 'height', 'style' ],
 	hasSupport( name ) {
-		return hasDimensionsSupport( name, 'aspectRatio' );
+		return hasDimensionsSupport( name );
 	},
 };
 
-function useBlockProps( { name, minHeight, style } ) {
+function useBlockProps( { name, width, height, minHeight, style } ) {
 	if (
-		! hasDimensionsSupport( name, 'aspectRatio' ) ||
-		shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY, 'aspectRatio' )
+		! hasDimensionsSupport( name ) ||
+		shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY )
 	) {
 		return {};
 	}
@@ -192,7 +198,23 @@ function useBlockProps( { name, minHeight, style } ) {
 		inlineStyleOverrides.aspectRatio = 'unset';
 	}
 
-	return { className, style: inlineStyleOverrides };
+	if (
+		( width || style?.dimensions?.width ) &&
+		! shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY, 'width' )
+	) {
+		inlineStyleOverrides.width = style?.dimensions?.width;
+	}
+	if (
+		( height || style?.dimensions?.height ) &&
+		! shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY, 'height' )
+	) {
+		inlineStyleOverrides.height = style?.dimensions?.height;
+	}
+
+	return {
+		className,
+		style: inlineStyleOverrides,
+	};
 }
 
 /**
