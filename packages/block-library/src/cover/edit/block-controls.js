@@ -3,6 +3,7 @@
  */
 import { useState } from '@wordpress/element';
 
+import { getBlockBindingsSource } from '@wordpress/blocks';
 import {
 	BlockControls,
 	MediaReplaceFlow,
@@ -10,6 +11,7 @@ import {
 	__experimentalBlockFullHeightAligmentControl as FullHeightAlignmentControl,
 	privateApis as blockEditorPrivateApis,
 } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -25,12 +27,19 @@ export default function CoverBlockControls( {
 	setAttributes,
 	onSelectMedia,
 	currentSettings,
+	context,
 	toggleUseFeaturedImage,
 	onClearMedia,
 	blockEditingMode,
 } ) {
-	const { contentPosition, id, useFeaturedImage, minHeight, minHeightUnit } =
-		attributes;
+	const {
+		contentPosition,
+		id,
+		useFeaturedImage,
+		minHeight,
+		minHeightUnit,
+		metadata,
+	} = attributes;
 	const { hasInnerBlocks, url } = currentSettings;
 
 	const [ prevMinHeightValue, setPrevMinHeightValue ] = useState( minHeight );
@@ -76,6 +85,25 @@ export default function CoverBlockControls( {
 		} );
 	};
 
+	const { lockUrlControls = false } = useSelect(
+		( select ) => {
+			const blockBindingsSource = getBlockBindingsSource(
+				metadata?.bindings?.url?.source
+			);
+
+			return {
+				lockUrlControls:
+					!! metadata?.bindings?.url &&
+					! blockBindingsSource?.canUserEditValue?.( {
+						select,
+						context,
+						args: metadata?.bindings?.url?.args,
+					} ),
+			};
+		},
+		[ context, metadata?.bindings?.url ]
+	);
+
 	return (
 		<>
 			{ ! isContentOnlyMode && (
@@ -97,19 +125,21 @@ export default function CoverBlockControls( {
 					/>
 				</BlockControls>
 			) }
-			<BlockControls group="other">
-				<MediaReplaceFlow
-					mediaId={ id }
-					mediaURL={ url }
-					allowedTypes={ ALLOWED_MEDIA_TYPES }
-					accept="image/*,video/*"
-					onSelect={ onSelectMedia }
-					onToggleFeaturedImage={ toggleUseFeaturedImage }
-					useFeaturedImage={ useFeaturedImage }
-					name={ ! url ? __( 'Add media' ) : __( 'Replace' ) }
-					onReset={ onClearMedia }
-				/>
-			</BlockControls>
+			{ ! lockUrlControls && (
+				<BlockControls group="other">
+					<MediaReplaceFlow
+						mediaId={ id }
+						mediaURL={ url }
+						allowedTypes={ ALLOWED_MEDIA_TYPES }
+						accept="image/*,video/*"
+						onSelect={ onSelectMedia }
+						onToggleFeaturedImage={ toggleUseFeaturedImage }
+						useFeaturedImage={ useFeaturedImage }
+						name={ ! url ? __( 'Add media' ) : __( 'Replace' ) }
+						onReset={ onClearMedia }
+					/>
+				</BlockControls>
+			) }
 		</>
 	);
 }
