@@ -16,7 +16,9 @@
  * @return string Returns the cover block markup, if useFeaturedImage is true.
  */
 function render_block_core_cover( $attributes, $content ) {
-	if ( 'image' !== $attributes['backgroundType'] || false === $attributes['useFeaturedImage'] ) {
+	$has_bindings_url    = isset( $attributes['metadata']['bindings']['url'] ) && isset( $attributes['url'] );
+	$uses_featured_image = true === $attributes['useFeaturedImage'];
+	if ( ! $has_bindings_url && ( 'image' !== $attributes['backgroundType'] || ! $uses_featured_image ) ) {
 		return $content;
 	}
 
@@ -40,7 +42,7 @@ function render_block_core_cover( $attributes, $content ) {
 		if ( in_the_loop() ) {
 			update_post_thumbnail_cache();
 		}
-		$current_featured_image = get_the_post_thumbnail_url( null, $attributes['sizeSlug'] ?? null );
+		$current_featured_image = $has_bindings_url ? $attributes['url'] : get_the_post_thumbnail_url( null, $attributes['sizeSlug'] ?? null );
 		if ( ! $current_featured_image ) {
 			return $content;
 		}
