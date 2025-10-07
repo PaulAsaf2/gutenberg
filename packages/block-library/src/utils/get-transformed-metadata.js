@@ -27,6 +27,7 @@ export function getTransformedMetadata(
 		'core/heading',
 		'core/image',
 		'core/button',
+		'core/cover',
 	];
 	// The metadata properties that should be preserved after the transform.
 	const transformSupportedProps = [];
