@@ -23,6 +23,7 @@ import { DataFormLayout } from '../data-form-layout';
 import { isCombinedField } from '../is-combined-field';
 import { DEFAULT_LAYOUT } from '../normalize-form-fields';
 import SummaryButton from './summary-button';
+import useFocusOnFormInput from './use-focus-on-form-input';
 
 function ModalContent< Item >( {
 	data,
@@ -51,6 +52,8 @@ function ModalContent< Item >( {
 		setChanges( ( prev ) => deepMerge( prev, newValue ) );
 	};
 
+	const focusOnMountRef = useFocusOnFormInput();
+
 	return (
 		<Modal
 			className="dataforms-layouts-panel__modal"
@@ -59,23 +62,25 @@ function ModalContent< Item >( {
 			title={ fieldLabel }
 			size="medium"
 		>
-			<DataFormLayout
-				data={ modalData }
-				form={ form }
-				onChange={ handleOnChange }
-			>
-				{ ( FieldLayout, nestedField ) => (
-					<FieldLayout
-						key={ nestedField.id }
-						data={ modalData }
-						field={ nestedField }
-						onChange={ handleOnChange }
-						hideLabelFromVision={
-							( form?.fields ?? [] ).length < 2
-						}
-					/>
-				) }
-			</DataFormLayout>
+			<div ref={ focusOnMountRef }>
+				<DataFormLayout
+					data={ modalData }
+					form={ form }
+					onChange={ handleOnChange }
+				>
+					{ ( FieldLayout, nestedField ) => (
+						<FieldLayout
+							key={ nestedField.id }
+							data={ modalData }
+							field={ nestedField }
+							onChange={ handleOnChange }
+							hideLabelFromVision={
+								( form?.fields ?? [] ).length < 2
+							}
+						/>
+					) }
+				</DataFormLayout>
+			</div>
 			<HStack
 				className="dataforms-layouts-panel__modal-footer"
 				spacing={ 3 }

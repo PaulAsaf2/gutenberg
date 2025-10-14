@@ -21,6 +21,7 @@ import { DataFormLayout } from '../data-form-layout';
 import { isCombinedField } from '../is-combined-field';
 import { DEFAULT_LAYOUT } from '../normalize-form-fields';
 import SummaryButton from './summary-button';
+import useFocusOnFormInput from './use-focus-on-form-input';
 
 function DropdownHeader( {
 	title,
@@ -51,6 +52,47 @@ function DropdownHeader( {
 				) }
 			</HStack>
 		</VStack>
+	);
+}
+
+function DropdownContent< Item >( {
+	onClose,
+	fieldLabel,
+	data,
+	form,
+	onChange,
+}: {
+	onClose: () => void;
+	fieldLabel?: string;
+	data: Item;
+	form: Form;
+	onChange: ( value: any ) => void;
+} ) {
+	const focusOnMountRef = useFocusOnFormInput();
+
+	return (
+		<>
+			<DropdownHeader title={ fieldLabel } onClose={ onClose } />
+			<div ref={ focusOnMountRef }>
+				<DataFormLayout
+					data={ data }
+					form={ form }
+					onChange={ onChange }
+				>
+					{ ( FieldLayout, nestedField ) => (
+						<FieldLayout
+							key={ nestedField.id }
+							data={ data }
+							field={ nestedField }
+							onChange={ onChange }
+							hideLabelFromVision={
+								( form?.fields ?? [] ).length < 2
+							}
+						/>
+					) }
+				</DataFormLayout>
+			</div>
+		</>
 	);
 }
 
@@ -103,7 +145,7 @@ function PanelDropdown< Item >( {
 		<Dropdown
 			contentClassName="dataforms-layouts-panel__field-dropdown"
 			popoverProps={ popoverProps }
-			focusOnMount
+			focusOnMount={ false }
 			toggleProps={ {
 				size: 'compact',
 				variant: 'tertiary',
@@ -121,26 +163,13 @@ function PanelDropdown< Item >( {
 				/>
 			) }
 			renderContent={ ( { onClose } ) => (
-				<>
-					<DropdownHeader title={ fieldLabel } onClose={ onClose } />
-					<DataFormLayout
-						data={ data }
-						form={ form }
-						onChange={ onChange }
-					>
-						{ ( FieldLayout, nestedField ) => (
-							<FieldLayout
-								key={ nestedField.id }
-								data={ data }
-								field={ nestedField }
-								onChange={ onChange }
-								hideLabelFromVision={
-									( form?.fields ?? [] ).length < 2
-								}
-							/>
-						) }
-					</DataFormLayout>
-				</>
+				<DropdownContent
+					onClose={ onClose }
+					fieldLabel={ fieldLabel }
+					data={ data }
+					form={ form }
+					onChange={ onChange }
+				/>
 			) }
 		/>
 	);
