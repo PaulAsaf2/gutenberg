@@ -2,6 +2,7 @@
  * External dependencies
  */
 import type * as Y from 'yjs';
+import type { Awareness } from 'y-protocols/awareness';
 
 /* globalThis */
 declare global {
@@ -39,7 +40,8 @@ export interface ProviderCreatorResult {
 export type ProviderCreator = (
 	objectType: ObjectType,
 	objectId: ObjectID,
-	ydoc: Y.Doc
+	ydoc: Y.Doc,
+	awareness?: Awareness
 ) => Promise< ProviderCreatorResult >;
 
 export interface RecordHandlers {
