@@ -1,0 +1,35 @@
+# Aliases names and emails inside of commits.
+# See https://git-scm.com/docs/gitmailmap
+#
+# Some entries appear as duplicates, but are both required to correct
+# identities with just the wrong name as well as those with the wrong
+# name and also the wrong email address.
+
+# Accounts with a display name.
+Aaron Jorbin <aaron@jorb.in> <aaronjorbin@users.noreply.github.com>
+Adam Silverstein <adam@earthbound.com> <adam@10up.com>
+Adam Silverstein <adam@earthbound.com> <adamjs@google.com>
+Adam Silverstein <adam@earthbound.com> <adamsilverstein@earthboundhosting.com>
+Adam Silverstein <adam@earthbound.com>
+Alex Lende <alex+github.com@lende.xyz> <ajlende@gmail.com>
+Alex Lende <alex+github.com@lende.xyz> <alex@lende.xyz>
+Andrew Duthie <andrew@andrewduthie.com> <aduthie7@gmail.com>
+Andrew Duthie <andrew@andrewduthie.com> <1779930+aduth@users.noreply.github.com>
+Andrew Ozz <azaozz@users.noreply.github.com> <743931+azaozz@users.noreply.github.com>
+Andrew Serong <andrewserong@gmail.com> <14988353+andrewserong@users.noreply.github.com>
+Andrei Draganescu <me@andreidraganescu.info> <me@andreidraganescue.info>
+Andrei Draganescu <me@andreidraganescu.info> <andrei.draganescu@automattic.com>
+Andrei Draganescu <me@andreidraganescu.info>
+Artemio Morales <artemio@altsalt.com> <artemio.morales@a8c.com>
+Artemio Morales <artemio@altsalt.com> <ra.morales244@gmail.com>
+Artemio Morales <artemio@altsalt.com> <ric.morales22@gmail.com>
+Bernie Reiter <ockham@raz.or.at> <96308+ockham@users.noreply.github.com>
+Daniel Richards <daniel.richards@automattic.com> <daniel.p.richards@gmail.com>
+Ella van Durpe <wp@iseulde.com> <4710635+ellatrix@users.noreply.github.com>
+Ella van Durpe <wp@iseulde.com> <ella@iseulde.com>
+Ella van Durpe <wp@iseulde.com> <iseulde@automattic.com>
+Ella van Durpe <wp@iseulde.com>
+Grzegorz (Greg) Ziółkowski <grzegorz@gziolo.pl> <grzegorz@gziolo.pl>
+Joen Asmussen <joen@automattic.com> <1204802+jasmussen@users.noreply.github.com>
+Joen Asmussen <joen@automattic.com> <asmussen@gmail.com>
+Jorge Costa <jorge.costa@automattic.com> <jorge.costa@developer.pt>
