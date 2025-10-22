@@ -1,7 +1,7 @@
 {
 	"$schema": "./schemas/json/wp-env.json",
 	"core": "WordPress/WordPress",
-	"plugins": [ "." ],
+	"plugins": [],
 	"themes": [ "./test/emptytheme" ],
 	"env": {
 		"development": {
