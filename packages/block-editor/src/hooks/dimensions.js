@@ -167,10 +167,10 @@ export default {
 	},
 };
 
-function useBlockProps( { name, width, minHeight, style } ) {
+function useBlockProps( { name, minHeight, style } ) {
 	if (
-		! hasDimensionsSupport( name ) ||
-		shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY )
+		! hasDimensionsSupport( name, 'aspectRatio' ) ||
+		shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY, 'aspectRatio' )
 	) {
 		return {};
 	}
@@ -197,17 +197,7 @@ function useBlockProps( { name, width, minHeight, style } ) {
 		inlineStyleOverrides.aspectRatio = 'unset';
 	}
 
-	if (
-		( width || style?.dimensions?.width ) &&
-		! shouldSkipSerialization( name, DIMENSIONS_SUPPORT_KEY, 'width' )
-	) {
-		inlineStyleOverrides.width = style?.dimensions?.width;
-	}
-
-	return {
-		className,
-		style: inlineStyleOverrides,
-	};
+	return { className, style: inlineStyleOverrides };
 }
 
 /**
