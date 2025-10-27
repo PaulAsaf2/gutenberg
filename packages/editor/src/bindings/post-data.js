@@ -75,16 +75,19 @@ function getPostDataFields( select, context, clientId ) {
 				label: __( 'Post Date' ),
 				value: entityDataValues?.date,
 				type: 'string',
+				format: 'datetime',
 			},
 			modified: {
 				label: __( 'Post Modified Date' ),
 				value: entityDataValues?.modified,
 				type: 'string',
+				format: 'datetime',
 			},
 			link: {
 				label: __( 'Post Link' ),
 				value: entityDataValues?.link,
 				type: 'string',
+				format: 'url',
 			},
 		};
 	}
@@ -195,6 +198,7 @@ export default {
 		return Object.entries( postDataFields ).map( ( [ key, field ] ) => ( {
 			label: field.label,
 			type: field.type,
+			format: field.format,
 			args: { field: key },
 		} ) );
 	},
