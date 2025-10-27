@@ -148,12 +148,12 @@
 							"description": "The format provides additional information about the attribute's shape.",
 							"type": "string",
 							"enum": [
-								"date",
-								"datetime",
-								"time",
+								"date-time",
 								"uri",
-								"url",
-								"email"
+								"email",
+								"ip",
+								"uuid",
+								"hex-color"
 							]
 						},
 						"enum": {
