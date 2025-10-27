@@ -9,7 +9,7 @@
 	"attributes": {
 		"datetime": {
 			"type": "string",
-			"format": "datetime",
+			"format": "date-time",
 			"role": "content"
 		},
 		"textAlign": {

@@ -75,19 +75,19 @@ function getPostDataFields( select, context, clientId ) {
 				label: __( 'Post Date' ),
 				value: entityDataValues?.date,
 				type: 'string',
-				format: 'datetime',
+				format: 'date-time',
 			},
 			modified: {
 				label: __( 'Post Modified Date' ),
 				value: entityDataValues?.modified,
 				type: 'string',
-				format: 'datetime',
+				format: 'date-time',
 			},
 			link: {
 				label: __( 'Post Link' ),
 				value: entityDataValues?.link,
 				type: 'string',
-				format: 'url',
+				format: 'uri',
 			},
 		};
 	}
