@@ -441,7 +441,7 @@ module.exports = {
 		},
 		{
 			files: [
-				'**/@(storybook|stories)/*',
+				'**/@(storybook|stories)/**',
 				'packages/components/src/**/*.tsx',
 			],
 			rules: {
