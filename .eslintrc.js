@@ -445,6 +445,10 @@ module.exports = {
 				'packages/components/src/**/*.tsx',
 			],
 			rules: {
+				'react/jsx-filename-extension': [
+					'error',
+					{ extensions: [ '.jsx', '.tsx' ] },
+				],
 				// Useful to add story descriptions via JSDoc without specifying params,
 				// or in TypeScript files where params are likely already documented outside of the JSDoc.
 				'jsdoc/require-param': 'off',
