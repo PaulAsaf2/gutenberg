@@ -62,6 +62,7 @@ interface PickerContentProps {
 	infiniteScrollEnabled: boolean;
 	actions?: ActionButton< SpaceObject >[];
 	selection?: string[];
+	paddingX?: string | number;
 }
 
 const DataViewsPickerContent = ( {
@@ -71,6 +72,7 @@ const DataViewsPickerContent = ( {
 	infiniteScrollEnabled,
 	actions: customActions,
 	selection: customSelection,
+	paddingX,
 }: PickerContentProps ) => {
 	const [ view, setView ] = useState< View >( {
 		type: LAYOUT_PICKER_GRID,
@@ -172,6 +174,7 @@ const DataViewsPickerContent = ( {
 				defaultLayouts={ {
 					[ LAYOUT_PICKER_GRID ]: {},
 				} }
+				paddingX={ paddingX }
 			/>
 		</>
 	);
@@ -236,6 +239,11 @@ export const WithModal = ( {
 
 	return (
 		<>
+			<style>{ `
+				.dataviews-picker-modal .components-modal__content {
+					padding: 0;
+				}
+			` }</style>
 			<HStack justify="left">
 				<Button
 					variant="primary"
@@ -265,19 +273,19 @@ export const WithModal = ( {
 					onRequestClose={ () => setIsModalOpen( false ) }
 					isFullScreen={ false }
 					size="fill"
+					className="dataviews-picker-modal"
 				>
-					<div style={ { padding: '16px' } }>
-						<DataViewsPickerContent
-							perPageSizes={ perPageSizes }
-							isMultiselectable={ isMultiselectable }
-							isGrouped={ isGrouped }
-							infiniteScrollEnabled={ infiniteScrollEnabled }
-							actions={ modalActions }
-							selection={ selectedItems.map( ( item ) =>
-								String( item.id )
-							) }
-						/>
-					</div>
+					<DataViewsPickerContent
+						perPageSizes={ perPageSizes }
+						isMultiselectable={ isMultiselectable }
+						isGrouped={ isGrouped }
+						infiniteScrollEnabled={ infiniteScrollEnabled }
+						actions={ modalActions }
+						selection={ selectedItems.map( ( item ) =>
+							String( item.id )
+						) }
+						paddingX={ 32 }
+					/>
 				</Modal>
 			) }
 		</>
