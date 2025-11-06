@@ -49,6 +49,7 @@ import type { NormalizedField, View } from '../../types';
 import DataViewsContext from '../dataviews-context';
 import InfiniteScrollToggle from './infinite-scroll-toggle';
 import { unlock } from '../../lock-unlock';
+import getHiddenFields from '../../utils/get-hidden-fields';
 
 const { Menu } = unlock( componentsPrivateApis );
 
@@ -552,19 +553,8 @@ function isDefined< T >( item: T | undefined ): item is T {
 function FieldControl() {
 	const { view, fields, onChangeView } = useContext( DataViewsContext );
 
-	const togglableFields = [
-		view?.titleField,
-		view?.mediaField,
-		view?.descriptionField,
-	].filter( Boolean );
 	const visibleFieldIds = view.fields ?? [];
-	const hiddenFields = fields.filter(
-		( f ) =>
-			! visibleFieldIds.includes( f.id ) &&
-			! togglableFields.includes( f.id ) &&
-			f.type !== 'media' &&
-			f.enableHiding !== false
-	);
+	const hiddenFields = getHiddenFields( view, fields );
 	let visibleFields = visibleFieldIds
 		.map( ( fieldId ) => fields.find( ( f ) => f.id === fieldId ) )
 		.filter( isDefined );
