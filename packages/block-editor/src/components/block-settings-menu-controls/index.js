@@ -22,6 +22,7 @@ import BlockModeToggle from '../block-settings-menu/block-mode-toggle';
 import { ModifyContentOnlySectionMenuItem } from '../content-lock';
 import { BlockRenameControl, useBlockRename } from '../block-rename';
 import { BlockVisibilityMenuItem } from '../block-visibility';
+import { UnlockDesignMenuItem } from '../unlock-design-menu-item';
 
 const { Fill, Slot } = createSlotFill( 'BlockSettingsMenuControls' );
 
@@ -95,6 +96,12 @@ const BlockSettingsMenuControlsSlot = ( { fillProps, clientIds = null } ) => {
 						{ showConvertToGroupButton && (
 							<ConvertToGroupButton
 								{ ...convertToGroupButtonProps }
+								onClose={ fillProps?.onClose }
+							/>
+						) }
+						{ selectedClientIds.length === 1 && (
+							<UnlockDesignMenuItem
+								clientId={ selectedClientIds[ 0 ] }
 								onClose={ fillProps?.onClose }
 							/>
 						) }
