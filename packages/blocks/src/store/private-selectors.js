@@ -29,6 +29,7 @@ const ROOT_BLOCK_SUPPORTS = [
 	'wideSize',
 	'blockGap',
 	'textDecoration',
+	'textIndent',
 	'textTransform',
 	'letterSpacing',
 ];
@@ -82,6 +83,11 @@ function filterElementBlockSupports( blockSupports, name, element ) {
 				element === 'text'
 			)
 		) {
+			return false;
+		}
+
+		// Text indent is only available for the text element
+		if ( support === 'textIndent' && ! name && element !== 'text' ) {
 			return false;
 		}
 

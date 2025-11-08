@@ -21,6 +21,7 @@ import LetterSpacingControl from '../letter-spacing-control';
 import TextAlignmentControl from '../text-alignment-control';
 import TextTransformControl from '../text-transform-control';
 import TextDecorationControl from '../text-decoration-control';
+import TextIndentControl from '../text-indent-control';
 import WritingModeControl from '../writing-mode-control';
 import { useToolsPanelDropdownMenuProps } from './utils';
 import { setImmutably } from '../../utils/object';
@@ -40,6 +41,7 @@ export function useHasTypographyPanel( settings ) {
 	const hasTextAlign = useHasTextAlignmentControl( settings );
 	const hasTextTransform = useHasTextTransformControl( settings );
 	const hasTextDecoration = useHasTextDecorationControl( settings );
+	const hasTextIndent = useHasTextIndentControl( settings );
 	const hasWritingMode = useHasWritingModeControl( settings );
 	const hasTextColumns = useHasTextColumnsControl( settings );
 	const hasFontSize = useHasFontSizeControl( settings );
@@ -53,6 +55,7 @@ export function useHasTypographyPanel( settings ) {
 		hasTextTransform ||
 		hasFontSize ||
 		hasTextDecoration ||
+		hasTextIndent ||
 		hasWritingMode ||
 		hasTextColumns
 	);
@@ -116,6 +119,10 @@ function useHasTextColumnsControl( settings ) {
 	return settings?.typography?.textColumns;
 }
 
+function useHasTextIndentControl( settings ) {
+	return settings?.typography?.textIndent;
+}
+
 /**
  * Concatenate all the font sizes into a single list for the font size picker.
  *
@@ -167,6 +174,7 @@ const DEFAULT_CONTROLS = {
 	textAlign: true,
 	textTransform: true,
 	textDecoration: true,
+	textIndent: false,
 	writingMode: true,
 	textColumns: true,
 };
@@ -336,6 +344,21 @@ export default function TypographyPanel( {
 	};
 	const hasLetterSpacing = () => !! value?.typography?.letterSpacing;
 	const resetLetterSpacing = () => setLetterSpacing( undefined );
+
+	// Text Indent
+	const hasTextIndentControl = useHasTextIndentControl( settings );
+	const textIndent = decodeValue( inheritedValue?.typography?.textIndent );
+	const setTextIndent = ( newValue ) => {
+		onChange(
+			setImmutably(
+				value,
+				[ 'typography', 'textIndent' ],
+				newValue || undefined
+			)
+		);
+	};
+	const hasTextIndent = () => !! value?.typography?.textIndent;
+	const resetTextIndent = () => setTextIndent( undefined );
 
 	// Text Columns
 	const hasTextColumnsControl = useHasTextColumnsControl( settings );
@@ -521,6 +544,26 @@ export default function TypographyPanel( {
 						onChange={ setLetterSpacing }
 						size="__unstable-large"
 						__unstableInputWidth="auto"
+					/>
+				</ToolsPanelItem>
+			) }
+			{ hasTextIndentControl && (
+				<ToolsPanelItem
+					label={ __( 'Line indent' ) }
+					hasValue={ hasTextIndent }
+					onDeselect={ resetTextIndent }
+					isShownByDefault={ defaultControls.textIndent }
+					panelId={ panelId }
+				>
+					<TextIndentControl
+						value={ textIndent }
+						onChange={ setTextIndent }
+						size="__unstable-large"
+						__unstableInputWidth="auto"
+						withSlider
+						help={ __(
+							'Indents the first line of each paragraph after the first one.'
+						) }
 					/>
 				</ToolsPanelItem>
 			) }
