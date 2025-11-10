@@ -174,7 +174,7 @@ const DEFAULT_CONTROLS = {
 	textAlign: true,
 	textTransform: true,
 	textDecoration: true,
-	textIndent: false,
+	textIndent: true,
 	writingMode: true,
 	textColumns: true,
 };
