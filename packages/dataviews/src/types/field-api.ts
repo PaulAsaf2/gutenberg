@@ -151,6 +151,7 @@ export type FieldTypeDefinition< Item > = {
 export type Rules< Item > = {
 	required?: boolean;
 	elements?: boolean;
+	pattern?: string | RegExp;
 	custom?:
 		| ( ( item: Item, field: NormalizedField< Item > ) => null | string )
 		| ( (
