@@ -308,10 +308,6 @@ test.describe( 'Post Meta source', () => {
 	} );
 
 	test.describe( 'Custom template', () => {
-		test.beforeAll( async ( { requestUtils } ) => {
-			await requestUtils.activateTheme( 'emptytheme' );
-		} );
-
 		test.beforeEach( async ( { admin, editor } ) => {
 			await admin.visitSiteEditor( {
 				postId: 'emptytheme//custom-template',
@@ -390,10 +386,6 @@ test.describe( 'Post Meta source', () => {
 				name: 'Block: Paragraph',
 			} );
 			await expect( paragraphBlock ).toHaveText( 'text_custom_field' );
-		} );
-
-		test.afterAll( async ( { requestUtils } ) => {
-			await requestUtils.activateTheme( 'twentytwentyone' );
 		} );
 	} );
 
